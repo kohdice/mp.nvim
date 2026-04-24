@@ -39,3 +39,21 @@ luac.out
 *.x86_64
 *.hex
 
+# luacheck
+.luacheckcache
+
+# env file
+.env
+
+# direnv
+.direnv/
+.envrc.local
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Claude
+settings.local.json
+.mcp.json
+.plans/
