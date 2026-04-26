@@ -2,14 +2,16 @@
 
 This file provides guidance to AI agents and agentic coding tools when working with code in
 this repository. Configuration and behavior details that already live in source files
-(`flake.nix`, `.stylua.toml`, `.luacheckrc`, `.gitignore`, `lua/mp/init.lua`,
+(`flake.nix`, `.stylua.toml`, `.luacheckrc`, `.gitignore`, `lua/mp/*.lua`,
 `plugin/mp.lua`) are intentionally **not** restated here — read those files instead.
 
 ## Project Overview
 
 `mp.nvim` wraps the external `mp` (markdown preview) CLI and renders the current buffer in a
 Neovim terminal-backed scratch buffer. User commands are registered in `plugin/mp.lua`; the
-rendering pipeline lives in `lua/mp/init.lua` — read those files for the exact command list
+rendering lifecycle is orchestrated in `lua/mp/init.lua`, with the default Neovim adapter in
+`lua/mp/adapter.lua`, source-file validation/command construction in `lua/mp/source.lua`,
+and preview state storage in `lua/mp/state.lua`. Read those files for the exact command list
 and rendering model.
 
 **Naming gotcha:** repository, Lua module, external binary, and user command all derive from
@@ -49,15 +51,15 @@ Preserve these when refactoring entry points:
 
 ## Design Rule: Adapter Pattern (Invariant)
 
-Business logic in `lua/mp/init.lua` MUST route every Neovim API call (`vim.api.nvim_*`,
-`vim.fn.*`, `vim.notify`) through a `default_adapter` table. Public entry points MUST accept
-adapter and executable overrides via their options table.
+Business logic in `lua/mp/*.lua` MUST route every Neovim API call (`vim.api.nvim_*`,
+`vim.fn.*`, `vim.notify`) through the default adapter defined in `lua/mp/adapter.lua`.
+Public entry points MUST accept adapter and executable overrides via their options table.
 
 **Why:** unit tests should be able to stub the adapter without booting a real Neovim runtime.
 Calling `vim.*` directly from a business-logic path forces tests to require a live editor.
 
-When adding functionality that touches `vim.*`, extend `default_adapter` and route the call
-through it. Never call `vim.*` directly from business-logic paths.
+When adding functionality that touches `vim.*`, extend `lua/mp/adapter.lua` and route the
+call through the adapter. Never call `vim.*` directly from business-logic paths.
 
 ## Static Analysis
 
