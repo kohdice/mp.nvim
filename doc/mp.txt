@@ -1,0 +1,88 @@
+*mp.txt*                       Markdown preview backed by the external mp CLI
+
+Author:  kohdice
+License: MIT
+
+==============================================================================
+CONTENTS                                                     *mp.nvim-contents*
+
+1. Overview                                               |mp.nvim-overview|
+2. Requirements                                           |mp.nvim-requirements|
+3. Commands                                               |mp.nvim-commands|
+4. Behavior                                               |mp.nvim-behavior|
+
+==============================================================================
+OVERVIEW                                                     *mp.nvim-overview*
+
+mp.nvim is a Neovim plugin for previewing Markdown with the external `mp`
+command. It is the editor integration layer only; Markdown rendering is handled
+by the `mp` executable on your system.
+
+When a preview is rendered, mp.nvim runs:
+>
+    mp --width <preview-window-width> <file>
+<
+The output is displayed in a terminal-backed scratch buffer.
+
+The Lua module name is `mp`, so direct Lua calls use:
+>
+    require('mp')
+<
+
+==============================================================================
+REQUIREMENTS                                             *mp.nvim-requirements*
+
+mp.nvim requires:
+
+- Neovim >= 0.12.0
+- `mp` executable available on `$PATH`
+
+The `mp` executable is available from:
+>
+    https://github.com/kohdice/markdown-preview
+<
+
+==============================================================================
+COMMANDS                                                     *mp.nvim-commands*
+
+                                                               *:Mp*
+:Mp
+        Open a preview for the current Markdown buffer.
+
+        The preview uses the current window. The source buffer must be saved
+        and must be recognized as Markdown.
+
+                                                               *:MpTab*
+:MpTab
+        Open a preview for the current Markdown buffer in a new tab.
+
+                                                               *:MpRefresh*
+:MpRefresh
+        Re-render the active preview.
+
+        This command works from either the source buffer or the preview buffer
+        while a preview is active.
+
+                                                               *:MpClose*
+:MpClose
+        Close the active preview and restore the source buffer when possible.
+
+Preview keymaps:
+
+q       Close the active preview from the preview buffer.
+
+==============================================================================
+BEHAVIOR                                                     *mp.nvim-behavior*
+
+- The source buffer must be saved before rendering.
+- Buffers with unsaved changes are rejected so the preview matches the file on
+  disk.
+- mp.nvim refreshes the preview automatically after the source buffer is
+  written.
+- mp.nvim refreshes the preview after the preview window is resized, so the
+  external command receives the current preview width.
+- Closing the preview window or wiping out the source buffer cleans up the
+  active preview state.
+
+==============================================================================
+ vim:tw=78:ts=8:noet:ft=help:norl:
