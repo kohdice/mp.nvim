@@ -1,7 +1,15 @@
 local M = {}
 
 function M.build_command(path, executable, width)
-  return { executable or 'mp', '--width', tostring(width), path }
+  return {
+    executable or 'mp',
+    '--color',
+    'always',
+    '--width',
+    tostring(width),
+    '--',
+    path,
+  }
 end
 
 local function has_markdown_extension(path)
