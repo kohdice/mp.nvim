@@ -48,6 +48,11 @@ Preserve these when refactoring entry points:
   a `vim.notify` error on older versions.
 - **`mp` CLI on `$PATH`** — `M.open` MUST check `vim.fn.executable('mp')` and surface the
   missing-executable error through `adapter.notify_error`, not via direct `vim.notify`.
+- **`mp --color=always`** — `source.build_command` MUST pass `--color=always` to `mp`. The
+  preview captures `mp` stdout with `vim.system` (a pipe, not a TTY), so `mp --color=auto`
+  (the default) suppresses ANSI escapes and the terminal buffer renders plain text.
+  `CLICOLOR_FORCE` happens to work today, but it is not part of `mp --help` and may be
+  removed; `--color=always` is the documented contract.
 
 ## Design Rule: Adapter Pattern (Invariant)
 

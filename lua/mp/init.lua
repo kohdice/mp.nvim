@@ -217,8 +217,6 @@ local function render_state(adapter, state, options)
   ensure_terminal(adapter, state)
 
   state.proc = adapter.system(M.build_command(path, state.executable, width), {
-    clear_env = false,
-    env = { CLICOLOR_FORCE = '1' },
     text = true,
   }, function(result)
     adapter.schedule(function()
